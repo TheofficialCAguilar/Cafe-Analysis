@@ -10,7 +10,7 @@ import pandas as pd
 import os
 
 DB_PATH  = "coffee_shop.db"
-CSV_PATH = "../data/coffee-shop-sales-revenue.csv"
+CSV_PATH = "data/coffee-shop-sales-revenue.csv"
 
 def create_database():
     print("Loading CSV...")
