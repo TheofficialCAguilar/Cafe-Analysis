@@ -12,7 +12,11 @@ app = FastAPI(
 #CORS allows React frontend to talk to this API 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:5173", "http://localhost:3000"],
+  allow_origins=[
+    "http://localhost:5173",
+    "http://localhost:3000",
+    "https://cafe-analysis-carlos.vercel.app"
+],
     allow_methods=["*"],
     allow_headers=["*"],
 )

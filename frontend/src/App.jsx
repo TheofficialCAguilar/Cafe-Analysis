@@ -12,7 +12,7 @@ import MenuComparison from "./components/MenuComparison";
 import StockPrep      from "./components/StockPrep";
 import HeatMap        from "./components/HeatMap";
 
-const API       = "http://localhost:8000";
+const API = import.meta.env.VITE_API_URL || "http://localhost:8000";
 const LOCATIONS = ["All", "Astoria", "Hell's Kitchen", "Lower Manhattan"];
 
 const DEFAULT_MENU = [
