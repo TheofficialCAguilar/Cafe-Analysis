@@ -7,9 +7,6 @@ __pycache__/
 # Database — too large for GitHub
 backend/coffee_shop.db
 
-# CSV — too large for GitHub  
-backend/data/
-
 # Node
 frontend/node_modules/
 frontend/dist/
