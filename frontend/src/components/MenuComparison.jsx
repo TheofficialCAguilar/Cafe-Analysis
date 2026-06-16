@@ -135,8 +135,6 @@ function getInsight(myPrice, mySales, benchmark) {
 
   return { priceNote, priceColor, salesNote, salesColor };
 }
-
-const COLORS  = ["#6366f1","#22d3ee","#f59e0b","#10b981","#f43f5e","#a78bfa","#34d399","#fb923c"];
 const tooltip = { background: "#1a1a1a", border: "1px solid #333", borderRadius: "6px",
                   color: "#f0f0f0", fontSize: "0.8rem", padding: "8px 12px" };
 
