@@ -3,7 +3,7 @@ import { useCountUp } from "../hooks/useCountUp";
 import { ACCENT } from "../theme";
 import axios from "axios";
 
-const API = "http://localhost:8000";
+const API = import.meta.env.VITE_API_URL || "http://localhost:8000";
 
 function ChangeArrow({ pct }) {
   if (pct === 0 || pct === null || pct === undefined) return null;

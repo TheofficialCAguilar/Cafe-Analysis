@@ -3,6 +3,7 @@ import { api } from "../hooks/useApi";
 import { COLORS } from "../theme";
 
 const LOCATIONS = ["Astoria", "Hell's Kitchen", "Lower Manhattan"];
+const API = import.meta.env.VITE_API_URL || "http://localhost:8000";
 
 export default function CustomerView() {
   const [hour, setHour]           = useState(8);
