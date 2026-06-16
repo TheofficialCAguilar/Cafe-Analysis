@@ -5,6 +5,9 @@ import {
   CartesianGrid, Cell
 } from "recharts";
 
+import { COLORS } from "../theme";
+
+
 //Real NYC benchmarks from 149k transactions
 //Each entry maps a drink type to real avg price and daily sales from the data
 const BENCHMARKS = {
