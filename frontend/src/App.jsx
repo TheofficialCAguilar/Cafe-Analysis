@@ -28,6 +28,17 @@ const TABS = [
   { id: "menu",     label: "My Menu vs NYC"  },
 ];
 
+// ── Responsive hook ───────────────────────────────────────────────────────────
+function useIsMobile() {
+  const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
+  useEffect(() => {
+    const handler = () => setIsMobile(window.innerWidth < 768);
+    window.addEventListener("resize", handler);
+    return () => window.removeEventListener("resize", handler);
+  }, []);
+  return isMobile;
+}
+
 function SectionTitle({ children }) {
   return (
     <h2 style={{ fontSize: "0.75rem", color: "#555", textTransform: "uppercase",
@@ -49,11 +60,13 @@ function FilterBtn({ label, active, onClick }) {
       fontSize: "0.78rem",
       fontWeight: active ? 600 : 400,
       transition: "all 0.15s",
+      whiteSpace: "nowrap",
     }}>{label}</button>
   );
 }
 
 export default function App() {
+  const isMobile = useIsMobile();
   const [view, setView]         = useState("owner");
   const [location, setLocation] = useState("All");
   const [overview, setOverview] = useState(null);
@@ -64,12 +77,11 @@ export default function App() {
   const [byDay, setByDay]       = useState([]);
   const [byCategory, setByCat]  = useState([]);
   const [loading, setLoading]   = useState(true);
+  const [menuOpen, setMenuOpen] = useState(false);
 
-  // ── Persistent menu state ─────────────────
-  // Lives in App so switching tabs never resets it
   const [menu, setMenu]         = useState(DEFAULT_MENU);
   const [nextId, setNextId]     = useState(4);
-  const [menuView, setMenuView] = useState("table"); 
+  const [menuView, setMenuView] = useState("table");
 
   const loc = location === "All" ? null : location;
 
@@ -96,13 +108,16 @@ export default function App() {
     });
   }, [location]);
 
+  // Close mobile menu when tab changes
+  useEffect(() => { setMenuOpen(false); }, [view]);
+
   return (
     <div style={{
       minHeight: "100vh",
       background: "#0a0906",
       color: "#f0ebe6",
       fontFamily: "'Inter', sans-serif",
-      // subtle grid pattern
+      overflowX: "hidden",   // ← prevents horizontal scroll
       backgroundImage: `
         linear-gradient(rgba(200,149,108,0.03) 1px, transparent 1px),
         linear-gradient(90deg, rgba(200,149,108,0.03) 1px, transparent 1px)
@@ -110,63 +125,68 @@ export default function App() {
       backgroundSize: "40px 40px",
     }}>
 
-      {/*Header*/}
+      {/* ── Header ── */}
       <header style={{
         background: "rgba(10,9,6,0.95)",
         backdropFilter: "blur(10px)",
         borderBottom: "1px solid #1e1a16",
-        padding: "0 2rem",
+        padding: isMobile ? "0 1rem" : "0 2rem",
         display: "flex",
         justifyContent: "space-between",
-        alignItems: "stretch",
-        flexWrap: "wrap",
-        gap: "1rem",
+        alignItems: "center",
+        flexWrap: "nowrap",
+        gap: "0.5rem",
         position: "sticky",
         top: 0,
         zIndex: 100,
+        minHeight: "56px",
       }}>
-        <div style={{ padding: "1.25rem 0" }}>
-          <h1 style={{ fontSize: "1.2rem", fontWeight: 700, margin: 0,
-                       color: "#f0ebe6", letterSpacing: "0.01em" }}>
+        {/* Logo */}
+        <div style={{ padding: "0.75rem 0", flexShrink: 0 }}>
+          <h1 style={{ fontSize: isMobile ? "1rem" : "1.2rem", fontWeight: 700,
+                       margin: 0, color: "#f0ebe6", letterSpacing: "0.01em" }}>
             NYC Cafe Analytics
           </h1>
-          <p style={{ fontSize: "0.72rem", color: "#6b5c4e", margin: "0.2rem 0 0" }}>
-            Maven Roasters · Astoria · Hell's Kitchen · Lower Manhattan
-          </p>
+          {!isMobile && (
+            <p style={{ fontSize: "0.68rem", color: "#6b5c4e", margin: "0.2rem 0 0" }}>
+              Maven Roasters · Astoria · Hell's Kitchen · Lower Manhattan
+            </p>
+          )}
         </div>
 
-        {/*Tab navigation with underline style*/}
-        <nav style={{ display: "flex", alignItems: "stretch", gap: 0 }}>
-          {TABS.map(tab => (
-            <button
-              key={tab.id}
-              onClick={() => setView(tab.id)}
-              style={{
-                padding: "0 1.25rem",
-                border: "none",
-                borderBottom: `2px solid ${view === tab.id ? "#c8956c" : "transparent"}`,
-                background: "transparent",
-                color: view === tab.id ? "#c8956c" : "#3a3028",
-                cursor: "pointer",
-                fontSize: "0.82rem",
-                fontWeight: view === tab.id ? 600 : 400,
-                transition: "all 0.2s",
-                letterSpacing: "0.01em",
-              }}
-              onMouseEnter={e => {
-                if (view !== tab.id) e.target.style.color = "#888";
-              }}
-              onMouseLeave={e => {
-                if (view !== tab.id) e.target.style.color = "#3a3028";
-              }}
-            >
-              {tab.label}
-            </button>
-          ))}
-        </nav>
+        {/* Desktop tabs */}
+        {!isMobile && (
+          <nav style={{ display: "flex", alignItems: "stretch", gap: 0, flex: 1,
+                        justifyContent: "center" }}>
+            {TABS.map(tab => (
+              <button
+                key={tab.id}
+                onClick={() => setView(tab.id)}
+                style={{
+                  padding: "0 1.1rem",
+                  height: "56px",
+                  border: "none",
+                  borderBottom: `2px solid ${view === tab.id ? "#c8956c" : "transparent"}`,
+                  background: "transparent",
+                  color: view === tab.id ? "#c8956c" : "#3a3028",
+                  cursor: "pointer",
+                  fontSize: "0.8rem",
+                  fontWeight: view === tab.id ? 600 : 400,
+                  transition: "all 0.2s",
+                  whiteSpace: "nowrap",
+                }}
+                onMouseEnter={e => { if (view !== tab.id) e.target.style.color = "#888"; }}
+                onMouseLeave={e => { if (view !== tab.id) e.target.style.color = "#3a3028"; }}
+              >
+                {tab.label}
+              </button>
+            ))}
+          </nav>
+        )}
 
-        <div style={{ padding: "1.25rem 0", display: "flex", alignItems: "center" }}>
-          <span style={{ fontSize: "0.7rem", color: "#6b5c4e" }}>
+        {/* Desktop built by */}
+        {!isMobile && (
+          <span style={{ fontSize: "0.68rem", color: "#6b5c4e", flexShrink: 0 }}>
             Built by{" "}
             <a href="https://github.com/TheofficialCAguilar" target="_blank"
                rel="noopener noreferrer"
@@ -174,18 +194,77 @@ export default function App() {
               Carlos Aguilar
             </a>
           </span>
-        </div>
+        )}
+
+        {/* Mobile hamburger */}
+        {isMobile && (
+          <button
+            onClick={() => setMenuOpen(!menuOpen)}
+            style={{
+              background: "transparent", border: "1px solid #2a2218",
+              borderRadius: "6px", padding: "0.4rem 0.6rem",
+              color: "#c8956c", cursor: "pointer", fontSize: "1rem",
+              flexShrink: 0,
+            }}
+          >
+            {menuOpen ? "✕" : "☰"}
+          </button>
+        )}
       </header>
 
-      {/*Owner Dashboard*/}
-      {view === "owner" && (
-        <div style={{ padding: "1.5rem 2rem", maxWidth: "1400px", margin: "0 auto" }}>
+      {/* Mobile dropdown menu */}
+      {isMobile && menuOpen && (
+        <div style={{
+          background: "rgba(10,9,6,0.98)",
+          borderBottom: "1px solid #1e1a16",
+          padding: "0.5rem 1rem 1rem",
+          position: "sticky",
+          top: "56px",
+          zIndex: 99,
+        }}>
+          {TABS.map(tab => (
+            <button
+              key={tab.id}
+              onClick={() => setView(tab.id)}
+              style={{
+                display: "block", width: "100%", textAlign: "left",
+                padding: "0.75rem 0.5rem",
+                border: "none",
+                borderBottom: "1px solid #1a1614",
+                background: "transparent",
+                color: view === tab.id ? "#c8956c" : "#888",
+                cursor: "pointer",
+                fontSize: "0.9rem",
+                fontWeight: view === tab.id ? 600 : 400,
+              }}
+            >
+              {view === tab.id ? "→ " : ""}{tab.label}
+            </button>
+          ))}
+        </div>
+      )}
 
-          {/*Location filter*/}
-          <div style={{ display: "flex", gap: "0.5rem", flexWrap: "wrap",
-                        marginBottom: "1.5rem", alignItems: "center" }}>
+      {/* ── Owner Dashboard ── */}
+      {view === "owner" && (
+        <div style={{
+          padding: isMobile ? "1rem" : "1.5rem 2rem",
+          maxWidth: "1400px",
+          margin: "0 auto",
+          width: "100%",
+          boxSizing: "border-box",
+        }}>
+
+          {/* Location filter — scrollable on mobile */}
+          <div style={{
+            display: "flex", gap: "0.5rem", flexWrap: isMobile ? "nowrap" : "wrap",
+            marginBottom: "1.5rem", alignItems: "center",
+            overflowX: isMobile ? "auto" : "visible",
+            paddingBottom: isMobile ? "0.25rem" : 0,
+            msOverflowStyle: "none", scrollbarWidth: "none",
+          }}>
             <span style={{ fontSize: "0.68rem", color: "#3a3028", textTransform: "uppercase",
-                           letterSpacing: "0.1em", marginRight: "0.25rem" }}>Location</span>
+                           letterSpacing: "0.1em", marginRight: "0.25rem",
+                           flexShrink: 0 }}>Location</span>
             {LOCATIONS.map(l => (
               <FilterBtn key={l} label={l} active={location === l}
                          onClick={() => setLocation(l)} />
@@ -202,7 +281,12 @@ export default function App() {
                 <SectionTitle>How the money moved</SectionTitle>
                 <RevenueChart data={byMonth} />
 
-                <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1.5rem" }}>
+                {/* Two col → single col on mobile */}
+                <div style={{
+                  display: "grid",
+                  gridTemplateColumns: isMobile ? "1fr" : "1fr 1fr",
+                  gap: "1.5rem",
+                }}>
                   <div>
                     <SectionTitle>When the rush hits</SectionTitle>
                     <PeakHours data={peakHours} />
@@ -214,20 +298,20 @@ export default function App() {
                       {byDay.map((d, i) => (
                         <div key={i} style={{ display: "flex", alignItems: "center",
                                               gap: "0.75rem", marginBottom: "0.5rem" }}>
-                          <span style={{ fontSize: "0.75rem", color: "#555", width: "32px" }}>
+                          <span style={{ fontSize: "0.75rem", color: "#555", width: "32px",
+                                         flexShrink: 0 }}>
                             {d.day_of_week.slice(0, 3)}
                           </span>
                           <div style={{ flex: 1, background: "#1a1614", borderRadius: "3px",
-                                        height: "8px" }}>
+                                        height: "8px", minWidth: 0 }}>
                             <div style={{
                               width: `${(d.total_revenue / Math.max(...byDay.map(x => x.total_revenue))) * 100}%`,
-                              background: "#c8956c",
-                              height: "8px", borderRadius: "3px",
+                              background: "#c8956c", height: "8px", borderRadius: "3px",
                               transition: "width 0.4s ease",
                             }} />
                           </div>
                           <span style={{ fontSize: "0.72rem", color: "#555",
-                                         width: "60px", textAlign: "right" }}>
+                                         width: "50px", textAlign: "right", flexShrink: 0 }}>
                             ${(d.total_revenue / 1000).toFixed(1)}k
                           </span>
                         </div>
@@ -236,7 +320,11 @@ export default function App() {
                   </div>
                 </div>
 
-                <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1.5rem" }}>
+                <div style={{
+                  display: "grid",
+                  gridTemplateColumns: isMobile ? "1fr" : "1fr 1fr",
+                  gap: "1.5rem",
+                }}>
                   <div>
                     <SectionTitle>What people actually order</SectionTitle>
                     <TopProducts data={topProducts} />
@@ -257,14 +345,10 @@ export default function App() {
         </div>
       )}
 
-      {/*Customer View*/}
+      {/* ── Other views ── */}
       {view === "customer" && <CustomerView />}
-
-      {/*Stock & Prep*/}
-      {view === "stock" && <StockPrep />}
-
-      {/*Menu Comparison — receives persistent state from App*/}
-      {view === "menu" && (
+      {view === "stock"    && <StockPrep />}
+      {view === "menu"     && (
         <MenuComparison
           menu={menu}
           setMenu={setMenu}
@@ -275,11 +359,16 @@ export default function App() {
         />
       )}
 
-      <footer style={{ textAlign: "center", padding: "2rem", color: "#6b5c4e",
-                       fontSize: "0.72rem", borderTop: "1px solid #1e1a16",
-                       marginTop: "2rem" }}>
+      <footer style={{
+        textAlign: "center",
+        padding: isMobile ? "1.5rem 1rem" : "2rem",
+        color: "#6b5c4e",
+        fontSize: "0.72rem",
+        borderTop: "1px solid #1e1a16",
+        marginTop: "2rem",
+      }}>
         <p style={{ margin: "0 0 0.25rem" }}>
-          NYC Cafe Analytics · Inspired by stephanie 🤎 
+          NYC Cafe Analytics · Inspired by Stephanie 🤎
         </p>
         <p style={{ margin: 0, color: "#3a3028" }}>
           © {new Date().getFullYear()} Carlos Aguilar · Data: Maven Roasters 2023 · For educational and portfolio purposes only

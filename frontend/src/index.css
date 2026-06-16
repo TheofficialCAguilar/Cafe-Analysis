@@ -5,3 +5,20 @@ button { cursor: pointer; }
 ::-webkit-scrollbar { width: 6px; }
 ::-webkit-scrollbar-track { background: #111; }
 ::-webkit-scrollbar-thumb { background: #333; border-radius: 3px; }
+
+/*Responsive fixes*/
+*, *::before, *::after { box-sizing: border-box; }
+
+/*Prevent all horizontal overflow*/
+html, body { overflow-x: hidden; max-width: 100vw; }
+
+/*Recharts responsive containers need a parent with defined width*/
+.recharts-responsive-container { max-width: 100% !important; }
+
+/*Hide scrollbar on filter row swipe*/
+.filter-scroll::-webkit-scrollbar { display: none; }
+
+/*Mobile chart height reduction*/
+@media (max-width: 768px) {
+  .recharts-wrapper { font-size: 10px !important; }
+}
