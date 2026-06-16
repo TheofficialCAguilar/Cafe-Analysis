@@ -15,7 +15,7 @@ app.add_middleware(
   allow_origins=[
     "http://localhost:5173",
     "http://localhost:3000",
-    "https://cafe-analysis-carlos.vercel.app"
+    "https://cafe-analysis-liart.vercel.app"
 ],
     allow_methods=["*"],
     allow_headers=["*"],
