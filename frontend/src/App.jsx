@@ -279,7 +279,7 @@ export default function App() {
                        fontSize: "0.72rem", borderTop: "1px solid #1e1a16",
                        marginTop: "2rem" }}>
         <p style={{ margin: "0 0 0.25rem" }}>
-          NYC Cafe Analytics 
+          NYC Cafe Analytics · Inspired by stephanie 🤎 
         </p>
         <p style={{ margin: 0, color: "#3a3028" }}>
           © {new Date().getFullYear()} Carlos Aguilar · Data: Maven Roasters 2023 · For educational and portfolio purposes only
