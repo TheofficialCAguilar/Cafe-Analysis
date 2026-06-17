@@ -28,7 +28,7 @@ const TABS = [
   { id: "menu",     label: "My Menu vs NYC"  },
 ];
 
-// ── Responsive hook ───────────────────────────────────────────────────────────
+//Responsive hook
 function useIsMobile() {
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
   useEffect(() => {
@@ -117,7 +117,7 @@ export default function App() {
       background: "#0a0906",
       color: "#f0ebe6",
       fontFamily: "'Inter', sans-serif",
-      overflowX: "hidden",   // ← prevents horizontal scroll
+      overflowX: "hidden",   //prevents horizontal scroll
       backgroundImage: `
         linear-gradient(rgba(200,149,108,0.03) 1px, transparent 1px),
         linear-gradient(90deg, rgba(200,149,108,0.03) 1px, transparent 1px)
@@ -241,6 +241,14 @@ export default function App() {
               {view === tab.id ? "→ " : ""}{tab.label}
             </button>
           ))}
+          <p style={{ fontSize: "0.68rem", color: "#3a3028", margin: "0.75rem 0.5rem 0" }}>
+            Built by{" "}
+            <a href="https://github.com/TheofficialCAguilar" target="_blank"
+               rel="noopener noreferrer"
+               style={{ color: "#c8956c", textDecoration: "none", fontWeight: 600 }}>
+              Carlos Aguilar
+            </a>
+          </p>
         </div>
       )}
 
@@ -385,7 +393,7 @@ export default function App() {
         marginTop: "2rem",
       }}>
         <p style={{ margin: "0 0 0.25rem" }}>
-          NYC Cafe Analytics · Inspired by Stephanie 🤎
+          NYC Cafe Analytics · Inspired by stephanie 🤎
         </p>
         <p style={{ margin: 0, color: "#3a3028" }}>
           © {new Date().getFullYear()} Carlos Aguilar · Data: Maven Roasters 2023 · For educational and portfolio purposes only
