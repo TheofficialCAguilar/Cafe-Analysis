@@ -339,7 +339,24 @@ export default function App() {
                 <LocationBar data={byLocation} />
 
                 <SectionTitle>When customers show up</SectionTitle>
-                <HeatMap location={location} />
+                {isMobile ? (
+                  <div style={{
+                    overflowX: "auto",
+                    overflowY: "hidden",
+                    WebkitOverflowScrolling: "touch",
+                    borderRadius: "8px",
+                    border: "1px solid #1e1a16",
+                    background: "#111",
+                    msOverflowStyle: "none",
+                    scrollbarWidth: "none",
+                  }}>
+                    <div style={{ minWidth: "600px" }}>
+                      <HeatMap location={location} />
+                    </div>
+                  </div>
+                ) : (
+                  <HeatMap location={location} />
+                )}
               </>
           }
         </div>
