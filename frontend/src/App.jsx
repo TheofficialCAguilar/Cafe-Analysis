@@ -252,7 +252,7 @@ export default function App() {
         </div>
       )}
 
-      {/* ── Owner Dashboard ── */}
+      {/*Owner Dashboard*/}
       {view === "owner" && (
         <div style={{
           padding: isMobile ? "1rem" : "1.5rem 2rem",
@@ -262,7 +262,7 @@ export default function App() {
           boxSizing: "border-box",
         }}>
 
-          {/* Location filter — scrollable on mobile */}
+          {/*Location filter scrollable on mobile*/}
           <div style={{
             display: "flex", gap: "0.5rem", flexWrap: isMobile ? "nowrap" : "wrap",
             marginBottom: "1.5rem", alignItems: "center",
@@ -289,7 +289,7 @@ export default function App() {
                 <SectionTitle>How the money moved</SectionTitle>
                 <RevenueChart data={byMonth} />
 
-                {/* Two col → single col on mobile */}
+                {/* Two col single col on mobile */}
                 <div style={{
                   display: "grid",
                   gridTemplateColumns: isMobile ? "1fr" : "1fr 1fr",
@@ -370,7 +370,7 @@ export default function App() {
         </div>
       )}
 
-      {/* ── Other views ── */}
+      {/*Other views*/}
       {view === "customer" && <CustomerView />}
       {view === "stock"    && <StockPrep />}
       {view === "menu"     && (
