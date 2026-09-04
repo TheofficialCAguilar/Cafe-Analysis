@@ -50,6 +50,10 @@ def root():
         ]
     }
 
+@app.get("/health")
+def health():
+    return {"status": "ok"}
+
 
 @app.get("/overview")
 def overview(location: Optional[str] = Query(None, description="Filter by location")):
